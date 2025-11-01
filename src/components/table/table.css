@@ -1,0 +1,68 @@
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table th {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 2px solid #dee2e6;
+    background-color: #f8f9fa;
+}
+
+.table td {
+    padding: 12px;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.table tr:last-child td {
+    border-bottom: none;
+}
+
+/* === SessionTable === */
+.sessions-table-container {
+    width: 100%;
+}
+
+.date-section {
+    margin-bottom: 40px;
+}
+
+.date-title {
+    font-size: 20px;
+    margin-bottom: 15px;
+    padding: 10px;
+    background-color: #e9ecef;
+    border-radius: 4px;
+}
+
+.times-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.time-chip {
+    padding: 8px 16px;
+    background-color: white;
+    color: #3498db;
+    border: 2px solid #3498db;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.time-chip:hover {
+    background-color: #3498db;
+    color: white;
+}
+
+.no-sessions {
+    text-align: center;
+    padding: 40px;
+    color: #666;
+    font-size: 18px;
+}

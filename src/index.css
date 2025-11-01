@@ -1,0 +1,523 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+}
+
+#root {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.app {
+    width: 100%;
+    max-width: 1400px;
+}
+
+/* === Общие стили === */
+.loading {
+    text-align: center;
+    padding: 20px;
+}
+
+.error {
+    color: #e74c3c;
+}
+
+/* === Контейнеры страниц === */
+.movies-container,
+.cinemas-container,
+.movie-sessions-container,
+.sessions-container,
+.booking-container,
+.my-tickets-container {
+    width: 100%;
+}
+
+/* === Заголовки === */
+.movies-title,
+.cinemas-title,
+.sessions-title,
+.booking-title,
+.my-tickets-title {
+    font-size: 28px;
+    margin-bottom: 20px;
+}
+
+.movie-title {
+    font-size: 32px;
+    margin-bottom: 30px;
+}
+
+/* === Auth Form === */
+.auth-form {
+    width: 100%;
+    max-width: 500px;
+    text-align: left;
+}
+
+.auth-form h2 {
+    margin-bottom: 30px;
+    color: #2c3e50;
+    font-size: 28px;
+    text-align: center;
+}
+
+.form-group {
+    margin-bottom: 25px;
+    text-align: left;
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 16px;
+    flex-shrink: 0;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
+}
+
+.form-group input:disabled {
+    background-color: #f5f5f5;
+    cursor: not-allowed;
+}
+
+.form-group input.error {
+    border-color: #e74c3c;
+    box-shadow: 0 0 5px rgba(231, 76, 60, 0.3);
+}
+
+.field-error {
+    color: #e74c3c;
+    font-size: 14px;
+    position: absolute;
+    left: calc(100% + 10px);
+    top: 50%;
+    transform: translateY(-50%);
+    white-space: nowrap;
+    background: white;
+    padding: 8px 12px;
+    border-radius: 4px;
+    border: 1px solid #e74c3c;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+    min-width: 200px;
+}
+
+.field-error::before {
+    content: '';
+    position: absolute;
+    right: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    border: 6px solid transparent;
+    border-right-color: #e74c3c;
+}
+
+.auth-button {
+    width: 100%;
+    padding: 15px;
+    background: #3498db;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.auth-button:hover:not(:disabled) {
+    background: #2980b9;
+}
+
+.auth-button:disabled {
+    background: #bdc3c7;
+    cursor: not-allowed;
+}
+
+.auth-switch {
+    margin-top: 25px;
+    color: #666;
+    font-size: 16px;
+    text-align: center;
+}
+
+.auth-link {
+    color: #3498db;
+    cursor: pointer;
+    text-decoration: underline;
+    font-weight: bold;
+}
+
+.auth-link:hover {
+    color: #2980b9;
+}
+
+.error-message {
+    color: #e74c3c;
+    background: #fadbd8;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    border: 1px solid #f5b7b1;
+    text-align: center;
+}
+
+/* === Кнопки === */
+.view-sessions-btn,
+.pay-button,
+.book-button {
+    padding: 8px 16px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.2s;
+}
+
+.view-sessions-btn:hover,
+.pay-button:hover:not(:disabled),
+.book-button:hover:not(:disabled) {
+    background-color: #2980b9;
+}
+
+.pay-button:disabled,
+.book-button:disabled {
+    background-color: #6c757d;
+    cursor: not-allowed;
+}
+
+.pay-button {
+    background-color: #28a745;
+}
+
+.pay-button:hover:not(:disabled) {
+    background-color: #218838;
+}
+
+.book-button {
+    padding: 12px 30px;
+    font-size: 16px;
+    background-color: #28a745;
+}
+
+.book-button:hover:not(:disabled) {
+    background-color: #218838;
+}
+
+/* === Movie Info === */
+.movie-info {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.movie-details {
+    display: flex;
+    gap: 30px;
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: left;
+}
+
+.movie-poster-small {
+    width: 50px;
+    height: 75px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.movie-poster-large {
+    width: 200px;
+    height: 300px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.movie-info-text {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.movie-description {
+    line-height: 1.6;
+    color: #666;
+    margin: 0;
+}
+
+.movie-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.movie-meta span {
+    font-size: 14px;
+}
+
+/* === Sessions Info === */
+.cinema-address {
+    color: #666;
+    margin-bottom: 30px;
+    font-size: 16px;
+}
+
+.session-info {
+    margin-bottom: 30px;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+}
+
+.session-info h3 {
+    margin: 0 0 10px 0;
+    font-size: 24px;
+}
+
+.cinema-name,
+.session-time {
+    margin: 0 0 5px 0;
+    color: #666;
+    font-size: 16px;
+}
+
+/* === Booking Seats === */
+.seats-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.screen {
+    text-align: center;
+    padding: 15px;
+    background: linear-gradient(180deg, #6c757d 0%, #495057 100%);
+    color: white;
+    margin-bottom: 30px;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+.seats-grid {
+    margin-bottom: 30px;
+}
+
+.seat-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+    gap: 8px;
+}
+
+.row-number {
+    width: 30px;
+    text-align: center;
+    font-weight: bold;
+    color: #666;
+}
+
+.seat {
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: bold;
+    transition: all 0.2s;
+}
+
+.seat.available {
+    background-color: white;
+    color: #28a745;
+    border-color: #28a745;
+}
+
+.seat.available:hover {
+    background-color: #28a745;
+    color: white;
+}
+
+.seat.selected {
+    background-color: #ffc107;
+    border-color: #ffc107;
+    color: #212529;
+}
+
+.seat.booked {
+    background-color: #dc3545;
+    border-color: #dc3545;
+    color: white;
+    cursor: not-allowed;
+}
+
+.seat.disabled {
+    background-color: #6c757d;
+    border-color: #6c757d;
+    color: white;
+    cursor: not-allowed;
+}
+
+.seats-legend {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.seat-legend {
+    width: 20px;
+    height: 20px;
+    border: 2px solid;
+    border-radius: 3px;
+}
+
+.seat-legend.available {
+    background-color: white;
+    border-color: #28a745;
+}
+
+.seat-legend.selected {
+    background-color: #ffc107;
+    border-color: #ffc107;
+}
+
+.seat-legend.booked {
+    background-color: #dc3545;
+    border-color: #dc3545;
+}
+
+.seat-legend.disabled {
+    background-color: #6c757d;
+    border-color: #6c757d;
+}
+
+.booking-actions {
+    text-align: center;
+    margin-top: 30px;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+}
+
+.selected-seats-info {
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+
+.seats-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.seat-badge {
+    padding: 4px 8px;
+    background-color: #3498db;
+    color: white;
+    border-radius: 12px;
+    font-size: 12px;
+}
+
+.auth-warning {
+    text-align: center;
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #fff3cd;
+    border: 1px solid #ffeaa7;
+    border-radius: 4px;
+    color: #856404;
+}
+
+/* === My Tickets === */
+.tickets-categories {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+.ticket-category {
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 20px;
+    background-color: #f8f9fa;
+}
+
+.category-title {
+    margin: 0 0 20px 0;
+    padding: 10px;
+    border-radius: 4px;
+    font-size: 20px;
+}
+
+.category-title.unpaid {
+    background-color: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeaa7;
+}
+
+.category-title.upcoming {
+    background-color: #d1ecf1;
+    color: #0c5460;
+    border: 1px solid #bee5eb;
+}
+
+.category-title.past {
+    background-color: #e2e3e5;
+    color: #383d41;
+    border: 1px solid #d6d8db;
+}
+
+.seats-display {
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.payment-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-start;
+}
+
+.time-left {
+    font-size: 12px;
+    color: #dc3545;
+    font-weight: bold;
+}
+
+.expired {
+    color: #dc3545;
+    font-size: 14px;
+    font-weight: bold;
+}
