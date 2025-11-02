@@ -1,6 +1,6 @@
 import {SessionsTable} from '@components'
 import {useCinemaSessions} from '@hooks'
-import {groupSessionsByMovie} from '@helpers'
+import {groupSessionsByMovie} from '@services'
 import {CinemaHeader} from './cinemaHeader'
 
 interface CinemaSessionsProps {

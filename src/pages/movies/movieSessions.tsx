@@ -1,5 +1,5 @@
 import {SessionsTable} from '@components'
-import {groupSessionsByCinema} from '@helpers'
+import {groupSessionsByCinema} from '@services'
 import {useMovieSessions} from '@hooks'
 import {MovieHeader} from './movieHeader'
 

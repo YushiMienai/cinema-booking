@@ -1,5 +1,5 @@
 import {Session, GroupedSession, Movie, Cinema} from '@types'
-import {formatTime} from './dateTime'
+import {formatTime} from 'src/helpers/dateTime'
 
 interface GroupingConfig<T> {
   getId: (session: Session) => number
