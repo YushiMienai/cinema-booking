@@ -1,14 +1,31 @@
 import {Table} from './table'
+import {GroupedSession} from '@types'
 import './table.css'
-import {Column, GroupedSession} from '@types'
 
 interface SessionsTableProps {
+  loading: boolean
   groupedSessions: {[key: string]: GroupedSession[]}
-  columns: Column<GroupedSession>[]
+  title: string
   onSessionSelect: (sessionId: number) => void
 }
 
-export const SessionsTable = ({groupedSessions, columns, onSessionSelect}: SessionsTableProps) => {
+export const SessionsTable = ({loading, groupedSessions, title, onSessionSelect}: SessionsTableProps) => {
+  if (loading) {
+    return <div className='loading'>Загрузка сеансов...</div>
+  }
+
+  const columns = [
+    {
+      key: 'movie',
+      title,
+      field: 'entityTitle'
+    },
+    {
+      key: 'times',
+      title: 'Время'
+    }
+  ]
+
   return (
     <div className='sessions-table-container'>
       {Object.entries(groupedSessions).map(([date, dateSessions]) => (
@@ -33,8 +50,7 @@ export const SessionsTable = ({groupedSessions, columns, onSessionSelect}: Sessi
                     </div>
                   )
                 }
-                : col
-            )}
+                : col)}
             results={dateSessions}
           />
         </div>

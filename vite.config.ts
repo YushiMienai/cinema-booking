@@ -12,9 +12,12 @@ export default defineConfig({
     alias: {
       '@types': path.resolve(__dirname, './src/types'),
       '@components': path.resolve(__dirname, './src/components'),
+      '@hooks': path.resolve(__dirname, './src/hooks'),
+      '@helpers': path.resolve(__dirname, './src/helpers'),
       '@pages': path.resolve(__dirname, './src/pages'),
       '@services': path.resolve(__dirname, './src/services'),
       '@stores': path.resolve(__dirname, './src/stores'),
+      '@config': path.resolve(__dirname, './src/config'),
     }
   },
   test: {

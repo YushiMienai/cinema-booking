@@ -2,8 +2,7 @@ import {useState, useEffect} from 'react'
 import {moviesApi} from '@services'
 import {Movie, Page} from '@types'
 import {Table} from '@components'
-
-const API_URL = import.meta.env.VITE_API_URL
+import {API_CONFIG} from '@config'
 
 interface MoviesProps {
   onPageChange: (page: Page) => void
@@ -46,7 +45,7 @@ export const Movies = ({onPageChange, onMovieSelect}: MoviesProps) => {
       title: '',
       renderCellContent: ({row}: {row: Movie}) => (
         <img
-          src={API_URL + row.posterImage}
+          src={API_CONFIG.baseURL + row.posterImage}
           alt={row.title}
           className='movie-poster-small'
         />

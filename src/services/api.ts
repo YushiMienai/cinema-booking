@@ -10,12 +10,7 @@ import {
   Seat,
   Booking
 } from '@types'
-
-const API_URL = import.meta.env.VITE_API_URL
-
-if (!API_URL) {
-  console.error('VITE_API_URL is not defined in environment variables')
-}
+import {API_CONFIG} from '@config'
 
 const getToken = (): string | null => {
   const state = useAuthStore.getState()
@@ -29,7 +24,7 @@ const getToken = (): string | null => {
 
 export const authApi = {
   async login(credentials: AuthRequest): Promise<AuthResponse> {
-    const response = await fetch(`${API_URL}/login`, {
+    const response = await fetch(`${API_CONFIG.baseURL}/login`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -48,7 +43,7 @@ export const authApi = {
   async register(credentials: RegisterRequest): Promise<AuthResponse> {
     const {username, password} = credentials
 
-    const response = await fetch(`${API_URL}/register`, {
+    const response = await fetch(`${API_CONFIG.baseURL}/register`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -67,7 +62,7 @@ export const authApi = {
 
 export const cinemaApi = {
   async getCinemas(): Promise<Cinema[]> {
-    const response = await fetch(`${API_URL}/cinemas`)
+    const response = await fetch(`${API_CONFIG.baseURL}/cinemas`)
     if (!response.ok) {
       throw new Error('Failed to fetch cinemas')
     }
@@ -75,7 +70,7 @@ export const cinemaApi = {
   },
 
   async getCinemaSessions(cinemaId: number): Promise<Session[]> {
-    const response = await fetch(`${API_URL}/cinemas/${cinemaId}/sessions`)
+    const response = await fetch(`${API_CONFIG.baseURL}/cinemas/${cinemaId}/sessions`)
     if (!response.ok) {
       throw new Error('Failed to fetch cinema sessions')
     }
@@ -85,7 +80,7 @@ export const cinemaApi = {
 
 export const moviesApi = {
   async getMovies(): Promise<Movie[]> {
-    const response = await fetch(`${API_URL}/movies`)
+    const response = await fetch(`${API_CONFIG.baseURL}/movies`)
     if (!response.ok) {
       throw new Error('Failed to fetch movies')
     }
@@ -93,7 +88,7 @@ export const moviesApi = {
   },
 
   async getMovieSessions(movieId: number): Promise<Session[]> {
-    const response = await fetch(`${API_URL}/movies/${movieId}/sessions`)
+    const response = await fetch(`${API_CONFIG.baseURL}/movies/${movieId}/sessions`)
     if (!response.ok) {
       throw new Error('Failed to fetch movie sessions')
     }
@@ -103,7 +98,7 @@ export const moviesApi = {
 
 export const movieSessionsApi = {
   async getMovieSession(movieSessionId: number): Promise<MovieSession> {
-    const response = await fetch(`${API_URL}/movieSessions/${movieSessionId}`)
+    const response = await fetch(`${API_CONFIG.baseURL}/movieSessions/${movieSessionId}`)
     if (!response.ok) {
       throw new Error('Failed to fetch movie session')
     }
@@ -121,7 +116,7 @@ export const movieSessionsApi = {
       headers['Authorization'] = `Bearer ${token}`
     }
 
-    const response = await fetch(`${API_URL}/movieSessions/${movieSessionId}/bookings`, {
+    const response = await fetch(`${API_CONFIG.baseURL}/movieSessions/${movieSessionId}/bookings`, {
       method: 'POST',
       headers,
       body: JSON.stringify({seats}),
@@ -143,7 +138,7 @@ export const bookingsApi = {
       headers['Authorization'] = `Bearer ${token}`
     }
 
-    const response = await fetch(`${API_URL}/me/bookings`, {
+    const response = await fetch(`${API_CONFIG.baseURL}/me/bookings`, {
       headers,
     })
 
@@ -162,7 +157,7 @@ export const bookingsApi = {
       headers['Authorization'] = `Bearer ${token}`
     }
 
-    const response = await fetch(`${API_URL}/bookings/${bookingId}/payments`, {
+    const response = await fetch(`${API_CONFIG.baseURL}/bookings/${bookingId}/payments`, {
       method: 'POST',
       headers,
     })
@@ -176,7 +171,7 @@ export const bookingsApi = {
 
 export const settingsApi = {
   async getSettings(): Promise<{bookingPaymentTimeSeconds: number}> {
-    const response = await fetch(`${API_URL}/settings`)
+    const response = await fetch(`${API_CONFIG.baseURL}/settings`)
     if (!response.ok) {
       throw new Error('Failed to fetch settings')
     }
