@@ -1,30 +1,18 @@
-import {ChangeEvent, FormEvent, useState} from 'react'
-import {authApi} from '@services'
-import {useAuthStore} from '@stores'
+import {FormEvent} from 'react'
+import {useNavigate} from 'react-router-dom'
 import {Form} from '@components'
-import type {AuthRequest} from '@types'
+import {AuthRequest} from '@types'
+import {useAuthActions, useAuthForm} from '@hooks'
 
-interface LoginProps {
-  onSwitchToRegister: () => void
-}
+export const Login = () => {
+  const navigate = useNavigate()
+  const { handleLogin } = useAuthActions()
 
-export const Login = ({onSwitchToRegister}: LoginProps) => {
-  const [formData, setFormData] = useState<AuthRequest>({
-    username: '',
-    password: ''
-  })
-  const [loading, setLoading] = useState<boolean>(false)
-  const [error, setError] = useState<string>('')
-  const login = useAuthStore((state) => state.login)
-
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const {name, value} = e.target
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }))
-    setError('')
-  }
+  const {formData, loading, error, handleChange, setLoading, setError} =
+    useAuthForm<AuthRequest>({
+      username: '',
+      password: ''
+    })
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
@@ -32,10 +20,8 @@ export const Login = ({onSwitchToRegister}: LoginProps) => {
     setError('')
 
     try {
-      const response = await authApi.login(formData)
-      login(response.token, response.username)
+      await handleLogin(formData)
     } catch (err) {
-      console.log(err)
       setError('Неверный логин или пароль. Проверьте введенные данные и попробуйте снова.')
     } finally {
       setLoading(false)
@@ -73,7 +59,7 @@ export const Login = ({onSwitchToRegister}: LoginProps) => {
       />
       <p className='auth-switch'>
         Если у вас нет аккаунта,{' '}
-        <span className='auth-link' onClick={onSwitchToRegister}>
+        <span className='auth-link' onClick={() => navigate('/register')}>
           зарегистрируйтесь
         </span>
       </p>

@@ -1,12 +1,8 @@
 import {useState, useEffect, useCallback} from 'react'
 import {bookingsApi, movieSessionsApi, moviesApi, cinemaApi, settingsApi} from '@services'
-import {BookingWithDetails, Page, TicketCategory, Seat, Booking, Movie, Cinema} from '@types'
+import {BookingWithDetails, TicketCategory, Seat, Booking, Movie, Cinema} from '@types'
 import {useAuthStore} from '@stores'
 import {Table} from '@components'
-
-interface MyTicketsProps {
-  onPageChange: (page: Page) => void
-}
 
 const TicketCategoryTitles = {
   [TicketCategory.UNPAID]: 'Неоплаченные',
@@ -14,18 +10,13 @@ const TicketCategoryTitles = {
   [TicketCategory.PAST]: 'Прошедшие'
 } as const
 
-export const MyTickets = ({onPageChange}: MyTicketsProps) => {
+export const MyTickets = () => {
   const [bookings, setBookings] = useState<BookingWithDetails[]>([])
   const [paymentTimeout, setPaymentTimeout] = useState<number>(300) // 5 минут по умолчанию
   const [loading, setLoading] = useState<boolean>(true)
   const [payingIds, setPayingIds] = useState<Set<string>>(new Set())
   const {isAuthenticated} = useAuthStore()
 
-  useEffect(() => {
-    if (!isAuthenticated) {
-      onPageChange(Page.LOGIN)
-    }
-  }, [isAuthenticated, onPageChange])
 
   useEffect(() => {
     if (!isAuthenticated) return

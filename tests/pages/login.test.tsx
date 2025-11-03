@@ -3,77 +3,136 @@ import userEvent from '@testing-library/user-event'
 import {Login} from '@pages'
 import {describe, it, expect, vi, afterEach} from 'vitest'
 
+// Константы
+const TEST_IDS = {
+  USER_NAME_INPUT: 'userNameInput',
+  PASSWORD_INPUT: 'passwordInput'
+} as const
 
-vi.mock('@stores', () => {
-  const mockStoreLogin = vi.fn()
-  const mockUseAuthStore = vi.fn((selector) => {
-    const state = {
-      login: mockStoreLogin,
-    }
-    return selector ? selector(state) : state
-  })
+const BUTTON_TEXTS = {
+  LOGIN: 'Войти',
+  REGISTER_LINK: 'зарегистрируйтесь'
+} as const
 
-  return {
-    useAuthStore: mockUseAuthStore
-  }
-})
+const PAGE_TEXTS = {
+  TITLE: 'Вход в аккаунт',
+  ERROR_MESSAGE: 'Неверный логин или пароль. Проверьте введенные данные и попробуйте снова.',
+  REGISTER_PROMPT: 'Если у вас нет аккаунта,'
+} as const
 
-vi.mock('@services', () => ({
-  authApi: {
-    login: vi.fn()
-  }
+const TEST_DATA = {
+  USERNAME: 'testuser',
+  PASSWORD: 'testpass',
+  WRONG_USERNAME: 'wronguser',
+  WRONG_PASSWORD: 'wrongpass'
+} as const
+
+// Мокаем хуки
+vi.mock('@hooks', () => ({
+  useAuthForm: vi.fn(() => ({
+    formData: { username: '', password: '' },
+    loading: false,
+    error: '',
+    handleChange: vi.fn(),
+    setLoading: vi.fn(),
+    setError: vi.fn()
+  })),
+  useAuthActions: vi.fn(() => ({
+    handleLogin: vi.fn()
+  }))
+}))
+
+// Мокаем навигацию
+vi.mock('react-router-dom', () => ({
+  useNavigate: vi.fn(() => vi.fn())
 }))
 
 describe('Login', () => {
-  const userNameInput = 'userNameInput'
-  const passwordInput = 'passwordInput'
-
-  const mockOnSwitchToRegister = vi.fn()
-
   afterEach(() => {
     vi.clearAllMocks()
   })
 
-  it('should call login successfully with correct credentials', async () => {
-    const user = userEvent.setup()
-    const {authApi} = await import('@services')
-    const {useAuthStore} = await import('@stores')
+  it('should render login form', () => {
+    render(<Login />)
 
-    const token = 'fake-token'
-    const username = 'TestUser'
-    const password = 'password123'
-
-    const storeInstance = useAuthStore((state) => state)
-    vi.mocked(authApi.login).mockResolvedValueOnce({token, username})
-
-    render(<Login onSwitchToRegister={mockOnSwitchToRegister} />)
-
-    // Заполняем форму по атрибуту name
-    await user.type(screen.getByTestId(userNameInput), username)
-    await user.type(screen.getByTestId(passwordInput), password)
-    await user.click(screen.getByText('Войти'))
-
-    // Проверяем успешный вызов
-    expect(authApi.login).toHaveBeenLastCalledWith({username, password})
-    expect(storeInstance.login).toHaveBeenCalledWith(token, username)
+    expect(screen.getByText(PAGE_TEXTS.TITLE)).toBeInTheDocument()
+    expect(screen.getByTestId(TEST_IDS.USER_NAME_INPUT)).toBeInTheDocument()
+    expect(screen.getByTestId(TEST_IDS.PASSWORD_INPUT)).toBeInTheDocument()
+    expect(screen.getByText(BUTTON_TEXTS.LOGIN)).toBeInTheDocument()
+    expect(screen.getByText(new RegExp(BUTTON_TEXTS.REGISTER_LINK, 'i'))).toBeInTheDocument()
+    expect(screen.getByText(PAGE_TEXTS.REGISTER_PROMPT)).toBeInTheDocument()
   })
 
-  it('should show error message on 401 failure', async () => {
+  it('should call handleLogin on form submit', async () => {
     const user = userEvent.setup()
-    const {authApi} = await import('@services')
+    const { useAuthForm, useAuthActions } = await import('@hooks')
 
-    vi.mocked(authApi.login).mockRejectedValueOnce({
-      message: 'Неверное имя пользователя или пароль'
+    const mockHandleLogin = vi.fn()
+    const mockSetLoading = vi.fn()
+
+    vi.mocked(useAuthActions).mockReturnValue({
+      handleLogin: mockHandleLogin
     })
 
-    render(<Login onSwitchToRegister={mockOnSwitchToRegister} />)
+    vi.mocked(useAuthForm).mockReturnValue({
+      formData: { username: TEST_DATA.USERNAME, password: TEST_DATA.PASSWORD },
+      loading: false,
+      error: '',
+      handleChange: vi.fn(),
+      setLoading: mockSetLoading,
+      setError: vi.fn()
+    })
 
-    // Заполняем и отправляем форму по атрибуту name
-    await user.type(screen.getByTestId(userNameInput), 'wronguser')
-    await user.type(screen.getByTestId(passwordInput), 'wrongpass')
-    await user.click(screen.getByText('Войти'))
+    render(<Login />)
 
-    // Проверяем сообщение об ошибке
-    expect(await screen.findByText(/неверный логин или пароль/i)).toBeInTheDocument()
+    await user.click(screen.getByText(BUTTON_TEXTS.LOGIN))
+
+    expect(mockSetLoading).toHaveBeenCalledWith(true)
+    expect(mockHandleLogin).toHaveBeenCalledWith({
+      username: TEST_DATA.USERNAME,
+      password: TEST_DATA.PASSWORD
+    })
+    expect(mockSetLoading).toHaveBeenCalledWith(false)
+  })
+
+  it('should show error message when handleLogin fails', async () => {
+    const user = userEvent.setup()
+    const { useAuthForm, useAuthActions } = await import('@hooks')
+
+    const mockHandleLogin = vi.fn().mockRejectedValue(new Error('Login failed'))
+    const mockSetError = vi.fn()
+
+    vi.mocked(useAuthActions).mockReturnValue({
+      handleLogin: mockHandleLogin
+    })
+
+    vi.mocked(useAuthForm).mockReturnValue({
+      formData: { username: TEST_DATA.WRONG_USERNAME, password: TEST_DATA.WRONG_PASSWORD },
+      loading: false,
+      error: '',
+      handleChange: vi.fn(),
+      setLoading: vi.fn(),
+      setError: mockSetError
+    })
+
+    render(<Login />)
+
+    await user.click(screen.getByText(BUTTON_TEXTS.LOGIN))
+
+    expect(mockSetError).toHaveBeenCalledWith(PAGE_TEXTS.ERROR_MESSAGE)
+  })
+
+  it('should navigate to register when link is clicked', async () => {
+    const user = userEvent.setup()
+    const mockNavigate = vi.fn()
+    const { useNavigate } = await import('react-router-dom')
+
+    vi.mocked(useNavigate).mockReturnValue(mockNavigate)
+
+    render(<Login />)
+
+    await user.click(screen.getByText(BUTTON_TEXTS.REGISTER_LINK))
+
+    expect(mockNavigate).toHaveBeenCalledWith('/register')
   })
 })

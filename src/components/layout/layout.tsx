@@ -5,19 +5,15 @@ import './Layout.css'
 
 interface LayoutProps {
   children: ReactNode
-  currentPage: string
-  onPageChange: (page: Page) => void
+  currentPage: Page
 }
 
-export const Layout = ({children, currentPage, onPageChange}: LayoutProps) => {
+export const Layout = ({children, currentPage}: LayoutProps) => {
   return (
     <div className='layout'>
       <div className='page-title'>{currentPage}</div>
       <div className='content-wrapper'>
-        <Menu
-          currentPage={currentPage}
-          onPageChange={onPageChange}
-        />
+        <Menu currentPage={currentPage} />
         <div className='main-content'>
           {children}
         </div>

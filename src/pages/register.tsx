@@ -1,12 +1,8 @@
-import {ChangeEvent, FormEvent, useState} from 'react'
-import {authApi} from '@services'
-import {useAuthStore} from '@stores'
+import {FormEvent, useState} from 'react'
+import {useNavigate} from 'react-router-dom'
 import {Form} from '@components'
+import {useAuthActions, useAuthForm, useRegisterValidation} from '@hooks'
 import {RegisterRequest} from '@types'
-
-interface RegisterProps {
-  onSwitchToLogin: () => void
-}
 
 interface ValidationErrors {
   username?: string
@@ -14,67 +10,27 @@ interface ValidationErrors {
   confirmPassword?: string
 }
 
-export const Register = ({onSwitchToLogin}: RegisterProps) => {
-  const [formData, setFormData] = useState<RegisterRequest>({
-    username: '',
-    password: '',
-    confirmPassword: ''
-  })
-  const [loading, setLoading] = useState<boolean>(false)
+export const Register = () => {
+  const navigate = useNavigate()
+  const {handleRegister} = useAuthActions()
+
+  const {formData, loading, error, handleChange, setLoading, setError} =
+    useAuthForm<RegisterRequest>({
+      username: '',
+      password: '',
+      confirmPassword: ''
+    })
+
   const [errors, setErrors] = useState<ValidationErrors>({})
-  const [apiError, setApiError] = useState<string>('')
-  const login = useAuthStore((state) => state.login)
-
-  const validateForm = (): boolean => {
-    const newErrors: ValidationErrors = {}
-
-    // Валидация username
-    if (formData.username.length < 8) {
-      newErrors.username = 'Имя пользователя должно содержать минимум 8 символов'
-    }
-
-    // Валидация password
-    if (formData.password.length < 8) {
-      newErrors.password = 'Пароль должен содержать минимум 8 символов'
-    } else if (!/(?=.*[A-Z])/.test(formData.password)) {
-      newErrors.password = 'Пароль должен содержать минимум 1 заглавную букву'
-    } else if (!/(?=.*\d)/.test(formData.password)) {
-      newErrors.password = 'Пароль должен содержать минимум 1 цифру'
-    }
-
-    // Валидация confirmPassword
-    if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = 'Пароли не совпадают'
-    }
-
-    setErrors(newErrors)
-    return Object.keys(newErrors).length === 0
-  }
-
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const {name, value} = e.target
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }))
-    // Очищаем ошибку при вводе
-    if (errors[name as keyof ValidationErrors]) {
-      setErrors(prev => ({
-        ...prev,
-        [name]: undefined
-      }))
-    }
-    // Очищаем API ошибку при изменении username
-    if (name === 'username' && apiError) {
-      setApiError('')
-    }
-  }
+  const {validateForm} = useRegisterValidation()
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
-    setApiError('')
+    setError('')
 
-    if (!validateForm()) {
+    const validationErrors = validateForm(formData)
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors)
       return
     }
 
@@ -82,11 +38,9 @@ export const Register = ({onSwitchToLogin}: RegisterProps) => {
     setErrors({})
 
     try {
-      const response = await authApi.register(formData)
-      login(response.token, response.username)
+      await handleRegister(formData)
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Ошибка регистрации'
-      setApiError(errorMessage)
+      setError(err instanceof Error ? err.message : 'Ошибка регистрации')
     } finally {
       setLoading(false)
     }
@@ -95,7 +49,7 @@ export const Register = ({onSwitchToLogin}: RegisterProps) => {
   return (
     <Form
       title='Регистрация'
-      error={apiError}
+      error={error}
       onSubmit={handleSubmit}
     >
       <Form.Group>
@@ -133,7 +87,7 @@ export const Register = ({onSwitchToLogin}: RegisterProps) => {
       />
       <p className='auth-switch'>
         Если у вас есть аккаунт,{' '}
-        <span className='auth-link' onClick={onSwitchToLogin}>
+        <span className='auth-link' onClick={() => navigate('/login')}>
           войдите
         </span>
       </p>

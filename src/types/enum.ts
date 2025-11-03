@@ -1,7 +1,8 @@
 export enum Page {
   MOVIES = 'Фильмы',
+  MOVIE_SESSIONS = 'Сеансы фильма',
   CINEMAS = 'Кинотеатры',
-  SESSIONS = 'Сеансы',
+  CINEMA_SESSIONS = 'Сеансы кинотеатра',
   BOOKING = 'Бронирование',
   MY_TICKETS = 'Мои билеты',
   REGISTER = 'Регистрация',

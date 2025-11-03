@@ -1,2 +1,2 @@
-export {formatTime, formatDuration} from './dateTime'
+export {formatTime, formatDuration, formatDateTime} from './dateTime'
 export {getMovieTitle, getCinemaName} from './content'

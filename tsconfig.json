@@ -23,7 +23,8 @@
       "@pages": ["src/pages"],
       "@services": ["src/services"],
       "@stores": ["src/stores"],
-      "@config": ["src/config"]
+      "@config": ["src/config"],
+      "@router": ["src/router"]
     },
     "allowSyntheticDefaultImports": true,
     "types": ["vitest/globals", "@testing-library/jest-dom"]

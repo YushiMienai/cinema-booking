@@ -22,8 +22,8 @@ describe('Table', () => {
   it('should render table with correct data', () => {
     render(<Table<MockInterface> {...props} />)
 
-    expect(screen.getByText('Кинотеатр 1')).toBeInTheDocument()
-    expect(screen.getByText('Адрес 2')).toBeInTheDocument()
+    expect(screen.getByText(results[0].name)).toBeInTheDocument()
+    expect(screen.getByText(results[1].address)).toBeInTheDocument()
     expect(screen.getAllByRole('row')).toHaveLength(3)
   })
 })

@@ -1,15 +1,13 @@
+import {useParams} from 'react-router-dom'
 import {SessionsTable} from '@components'
 import {useCinemaSessions} from '@hooks'
+import {Page} from '@types'
 import {groupSessionsByMovie} from '@services'
 import {CinemaHeader} from './cinemaHeader'
 
-interface CinemaSessionsProps {
-  cinemaId: number
-  onMovieSessionSelect: (movieSessionId: number) => void
-}
-
-export const CinemaSessions = ({cinemaId, onMovieSessionSelect}: CinemaSessionsProps) => {
-  const {cinema, sessions, movies, loading} = useCinemaSessions(cinemaId)
+export const CinemaSessions = () => {
+  const {cinemaId} = useParams<{cinemaId: string}>()
+  const {cinema, sessions, movies, loading} = useCinemaSessions(Number(cinemaId))
 
   const groupedSessions = groupSessionsByMovie(sessions, movies)
 
@@ -23,9 +21,8 @@ export const CinemaSessions = ({cinemaId, onMovieSessionSelect}: CinemaSessionsP
       <SessionsTable
         title='Фильм'
         loading={loading}
-        results={movies}
         groupedSessions={groupedSessions}
-        onSessionSelect={onMovieSessionSelect}
+        page={Page.CINEMA_SESSIONS}
       />
     </div>
   )

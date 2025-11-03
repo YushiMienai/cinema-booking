@@ -24,7 +24,7 @@ const getToken = (): string | null => {
 
 export const authApi = {
   async login(credentials: AuthRequest): Promise<AuthResponse> {
-    const response = await fetch(`${API_CONFIG.baseURL}/login`, {
+    const response = await fetch(`${API_CONFIG.baseURL}${API_CONFIG.endpoints.login}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -43,7 +43,7 @@ export const authApi = {
   async register(credentials: RegisterRequest): Promise<AuthResponse> {
     const {username, password} = credentials
 
-    const response = await fetch(`${API_CONFIG.baseURL}/register`, {
+    const response = await fetch(`${API_CONFIG.baseURL}${API_CONFIG.endpoints.register}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -62,7 +62,7 @@ export const authApi = {
 
 export const cinemaApi = {
   async getCinemas(): Promise<Cinema[]> {
-    const response = await fetch(`${API_CONFIG.baseURL}/cinemas`)
+    const response = await fetch(`${API_CONFIG.baseURL}${API_CONFIG.endpoints.cinemas}`)
     if (!response.ok) {
       throw new Error('Failed to fetch cinemas')
     }
@@ -70,7 +70,7 @@ export const cinemaApi = {
   },
 
   async getCinemaSessions(cinemaId: number): Promise<Session[]> {
-    const response = await fetch(`${API_CONFIG.baseURL}/cinemas/${cinemaId}/sessions`)
+    const response = await fetch(`${API_CONFIG.baseURL}${API_CONFIG.endpoints.cinemas}/${cinemaId}/sessions`)
     if (!response.ok) {
       throw new Error('Failed to fetch cinema sessions')
     }
@@ -80,7 +80,7 @@ export const cinemaApi = {
 
 export const moviesApi = {
   async getMovies(): Promise<Movie[]> {
-    const response = await fetch(`${API_CONFIG.baseURL}/movies`)
+    const response = await fetch(`${API_CONFIG.baseURL}${API_CONFIG.endpoints.movies}`)
     if (!response.ok) {
       throw new Error('Failed to fetch movies')
     }
@@ -88,7 +88,7 @@ export const moviesApi = {
   },
 
   async getMovieSessions(movieId: number): Promise<Session[]> {
-    const response = await fetch(`${API_CONFIG.baseURL}/movies/${movieId}/sessions`)
+    const response = await fetch(`${API_CONFIG.baseURL}${API_CONFIG.endpoints.movies}/${movieId}/sessions`)
     if (!response.ok) {
       throw new Error('Failed to fetch movie sessions')
     }
@@ -98,7 +98,7 @@ export const moviesApi = {
 
 export const movieSessionsApi = {
   async getMovieSession(movieSessionId: number): Promise<MovieSession> {
-    const response = await fetch(`${API_CONFIG.baseURL}/movieSessions/${movieSessionId}`)
+    const response = await fetch(`${API_CONFIG.baseURL}${API_CONFIG.endpoints.movieSessions}/${movieSessionId}`)
     if (!response.ok) {
       throw new Error('Failed to fetch movie session')
     }
@@ -116,7 +116,7 @@ export const movieSessionsApi = {
       headers['Authorization'] = `Bearer ${token}`
     }
 
-    const response = await fetch(`${API_CONFIG.baseURL}/movieSessions/${movieSessionId}/bookings`, {
+    const response = await fetch(`${API_CONFIG.baseURL}${API_CONFIG.endpoints.movieSessions}/${movieSessionId}/bookings`, {
       method: 'POST',
       headers,
       body: JSON.stringify({seats}),
@@ -138,7 +138,7 @@ export const bookingsApi = {
       headers['Authorization'] = `Bearer ${token}`
     }
 
-    const response = await fetch(`${API_CONFIG.baseURL}/me/bookings`, {
+    const response = await fetch(`${API_CONFIG.baseURL}${API_CONFIG.endpoints.meBookings}`, {
       headers,
     })
 
@@ -157,7 +157,7 @@ export const bookingsApi = {
       headers['Authorization'] = `Bearer ${token}`
     }
 
-    const response = await fetch(`${API_CONFIG.baseURL}/bookings/${bookingId}/payments`, {
+    const response = await fetch(`${API_CONFIG.baseURL}${API_CONFIG.endpoints.bookings}/${bookingId}/payments`, {
       method: 'POST',
       headers,
     })
@@ -171,7 +171,7 @@ export const bookingsApi = {
 
 export const settingsApi = {
   async getSettings(): Promise<{bookingPaymentTimeSeconds: number}> {
-    const response = await fetch(`${API_CONFIG.baseURL}/settings`)
+    const response = await fetch(`${API_CONFIG.baseURL}${API_CONFIG.endpoints.settings}`)
     if (!response.ok) {
       throw new Error('Failed to fetch settings')
     }

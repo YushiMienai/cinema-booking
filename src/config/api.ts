@@ -10,7 +10,12 @@ export const API_CONFIG = {
   endpoints: {
     movies: '/movies',
     cinemas: '/cinemas',
-    sessions: '/sessions',
-    auth: '/auth'
+    movieSessions: '/movieSessions',
+    cinemaSessions: '/cinemaSessions',
+    login: '/login',
+    register: '/register',
+    meBookings: '/me/bookings',
+    bookings: '/bookings',
+    settings: '/settings',
   }
 }

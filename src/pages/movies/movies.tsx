@@ -1,15 +1,12 @@
 import {useState, useEffect} from 'react'
-import {moviesApi} from '@services'
-import {Movie, Page} from '@types'
+import {useNavigate} from 'react-router-dom'
+import {getRoute, moviesApi} from '@services'
+import {Column, Movie, Page} from '@types'
 import {Table} from '@components'
 import {API_CONFIG} from '@config'
 
-interface MoviesProps {
-  onPageChange: (page: Page) => void
-  onMovieSelect: (movieId: number) => void
-}
-
-export const Movies = ({onPageChange, onMovieSelect}: MoviesProps) => {
+export const Movies = () => {
+  const navigate = useNavigate()
   const [movies, setMovies] = useState<Movie[]>([])
   const [loading, setLoading] = useState<boolean>(true)
 
@@ -34,12 +31,7 @@ export const Movies = ({onPageChange, onMovieSelect}: MoviesProps) => {
     return `${hours}:${mins.toString().padStart(2, '0')}`
   }
 
-  const handleViewSessions = (movieId: number) => {
-    onMovieSelect(movieId)
-    onPageChange(Page.SESSIONS)
-  }
-
-  const columns = [
+  const columns: Column<Movie>[] = [
     {
       key: 'poster',
       title: '',
@@ -71,7 +63,7 @@ export const Movies = ({onPageChange, onMovieSelect}: MoviesProps) => {
       title: '',
       renderCellContent: ({row}: {row: Movie}) => (
         <button
-          onClick={() => handleViewSessions(row.id)}
+          onClick={() => navigate(getRoute(Page.MOVIE_SESSIONS, row.id))}
           className='view-sessions-btn'
         >
           Посмотреть сеансы

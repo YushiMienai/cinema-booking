@@ -1,15 +1,13 @@
+import {useParams} from 'react-router-dom'
 import {SessionsTable} from '@components'
 import {groupSessionsByCinema} from '@services'
 import {useMovieSessions} from '@hooks'
+import {Page} from '@types'
 import {MovieHeader} from './movieHeader'
 
-interface MovieSessionsProps {
-  movieId: number
-  onMovieSessionSelect: (movieSessionId: number) => void
-}
-
-export const MovieSessions = ({movieId, onMovieSessionSelect}: MovieSessionsProps) => {
-  const {movie, sessions, cinemas, loading} = useMovieSessions(movieId)
+export const MovieSessions = () => {
+  const {movieId} = useParams<{movieId: string}>()
+  const {movie, sessions, cinemas, loading} = useMovieSessions(Number(movieId))
 
   if (!movie) {
     return <div className='error'>Фильм не найден</div>
@@ -23,9 +21,8 @@ export const MovieSessions = ({movieId, onMovieSessionSelect}: MovieSessionsProp
       <SessionsTable
         title='Кинотеатр'
         loading={loading}
-        results={cinemas}
         groupedSessions={groupedSessions}
-        onSessionSelect={onMovieSessionSelect}
+        page={Page.MOVIE_SESSIONS}
       />
     </div>
   )

@@ -1,15 +1,18 @@
+import {useNavigate} from 'react-router-dom'
+import {GroupedSession, Page} from '@types'
 import {Table} from './table'
-import {GroupedSession} from '@types'
 import './table.css'
+import {getRoute} from '@services'
 
 interface SessionsTableProps {
   loading: boolean
   groupedSessions: {[key: string]: GroupedSession[]}
   title: string
-  onSessionSelect: (sessionId: number) => void
+  page: Page
 }
 
-export const SessionsTable = ({loading, groupedSessions, title, onSessionSelect}: SessionsTableProps) => {
+export const SessionsTable = ({loading, groupedSessions, title}: SessionsTableProps) => {
+  const navigate = useNavigate()
   if (loading) {
     return <div className='loading'>Загрузка сеансов...</div>
   }
@@ -42,7 +45,7 @@ export const SessionsTable = ({loading, groupedSessions, title, onSessionSelect}
                         <span
                           key={index}
                           className='time-chip'
-                          onClick={() => onSessionSelect(timeObj.sessionId)}
+                          onClick={() => navigate(getRoute(Page.BOOKING, timeObj.sessionId))}
                         >
                           {timeObj.time}
                         </span>

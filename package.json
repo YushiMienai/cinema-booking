@@ -16,6 +16,7 @@
   "dependencies": {
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
+    "react-router-dom": "^7.9.5",
     "zustand": "^5.0.8"
   },
   "devDependencies": {
@@ -34,12 +35,12 @@
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.4.24",
-    "vite-plugin-eslint": "^1.8.1",
+    "jiti": "^2.6.1",
     "jsdom": "^27.1.0",
     "msw": "^2.11.6",
     "typescript": "^5.0.2",
     "vite": "^7.1.12",
-    "vitest": "^4.0.5",
-    "jiti": "^2.6.1"
+    "vite-plugin-eslint": "^1.8.1",
+    "vitest": "^4.0.5"
   }
 }

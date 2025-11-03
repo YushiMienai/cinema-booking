@@ -1,14 +1,11 @@
-import {useState, useEffect} from 'react'
-import {cinemaApi} from '@services'
+import {useEffect, useState} from 'react'
+import {useNavigate} from 'react-router-dom'
+import {cinemaApi, getRoute} from '@services'
 import {Cinema, Column, Page} from '@types'
 import {Table} from '@components'
 
-interface CinemasProps {
-  onPageChange: (page: Page) => void
-  onCinemaSelect: (cinemaId: number) => void
-}
-
-export const Cinemas = ({onPageChange, onCinemaSelect}: CinemasProps) => {
+export const Cinemas = () => {
+  const navigate = useNavigate()
   const [cinemas, setCinemas] = useState<Cinema[]>([])
   const [loading, setLoading] = useState<boolean>(true)
 
@@ -27,11 +24,6 @@ export const Cinemas = ({onPageChange, onCinemaSelect}: CinemasProps) => {
     fetchCinemas()
   }, [])
 
-  const handleViewSessions = (cinemaId: number) => {
-    onCinemaSelect(cinemaId)
-    onPageChange(Page.SESSIONS)
-  }
-
   const columns: Column<Cinema>[] = [
     {
       key: 'name',
@@ -47,7 +39,7 @@ export const Cinemas = ({onPageChange, onCinemaSelect}: CinemasProps) => {
       key: 'actions',
       renderCellContent: ({row}: {row: Cinema}) => (
         <button
-          onClick={() => handleViewSessions(row.id)}
+          onClick={() => navigate(getRoute(Page.CINEMA_SESSIONS, row.id))}
           className='view-sessions-btn'
         >
           Посмотреть сеансы
